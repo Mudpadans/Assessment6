@@ -1,5 +1,11 @@
 const shuffle = require("../src/shuffle");
 
 describe("shuffle should...", () => {
-  // CODE HERE
+  test("shuffle returns with an array", () => {
+
+  })
+
+  test('the array has been shuffled', () => {
+    
+  })
 });
