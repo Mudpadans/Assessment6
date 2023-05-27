@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const bots = require("./src/botsData");
 const shuffle = require("./src/shuffle");
 
@@ -10,6 +11,18 @@ const app = express();
 
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`))
+app.use(cors());
+
+// include and initialize the rollbar library with your access token
+var Rollbar = require('rollbar')
+var rollbar = new Rollbar({
+  accessToken: '00e1012c8a91421982989b8079898551',
+  captureUncaught: true,
+  captureUnhandledRejections: true,
+})
+
+// record a generic message and send it to Rollbar
+rollbar.log('Hello world!')
 
 const port = 8000
 
@@ -46,6 +59,8 @@ app.get("/api/robots", (req, res) => {
     res.sendStatus(400);
   }
 });
+rollbar.warning('variable not defined')
+rollbar.info("bots received")
 
 app.get("/api/robots/shuffled", (req, res) => {
   try {
@@ -56,6 +71,7 @@ app.get("/api/robots/shuffled", (req, res) => {
     res.sendStatus(400);
   }
 });
+rollbar.info("bots have been shuffled")
 
 app.post("/api/duel", (req, res) => {
   try {
@@ -73,6 +89,7 @@ app.post("/api/duel", (req, res) => {
     } else {
       playerRecord.losses += 1;
       res.status(200).send("You won!");
+      rollbar.error("wins added to losses")
     }
   } catch (error) {
     console.log("ERROR DUELING", error);
